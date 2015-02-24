@@ -13,10 +13,9 @@ pg.connect(process.env.DATABASE_URL+'?ssl=true', function(err, client, done) {
     console.error(err);
     process.exit(1);
   }
-  client.query('SELECT contact.twitter_handle__c FROM salesforce.contact WHERE contact.twitter_handle__c IS NOT NULL', function(err, result) {
-    done();
+  client.query('SELECT twitter_handle__c, sfid FROM salesforce.contact WHERE contact.twitter_handle__c IS NOT NULL', function(err, result) {
     if (err) { 
-      console.error(err); response.send("Error " + err); 
+      console.error(err);
     } else {
       var contacts = {};
       result.rows.forEach(function(row){
@@ -24,27 +23,33 @@ pg.connect(process.env.DATABASE_URL+'?ssl=true', function(err, client, done) {
       });
       console.log('contacts :', contacts);
 
-      client.query('SELECT campaign.hashtag__c FROM salesforce.campaign WHERE campaign.hashtag__c IS NOT NULL', function(err, result) {
-        done();
+      client.query('SELECT hashtag__c, sfid FROM salesforce.campaign WHERE campaign.hashtag__c IS NOT NULL', function(err, result) {
         if (err) { 
-          console.error(err); response.send("Error " + err); 
+          console.error(err);
         } else {
-          var hashtags = [];
+          var campaigns = result.rows;
           var query = '';
           result.rows.forEach(function(row){
             query += ((query === '') ? '' : ',')+row.hashtag__c;
-            hashtags.push(row.hashtag__c);
           });
           console.log('query: ', query);
-          console.log('hashtags: ', hashtags);
+          console.log('campaigns: ', campaigns);
+
           tw.stream('statuses/filter', {track: query}, function(stream) {
             stream.on('data', function(tweet) {
               console.log('Tweet: ',tweet);
               if (contacts[tweet.user.screen_name]) {
-                // tweet.text, tweet.user.screen_name
-                hashtags.forEach(function(hashtag){
-                  if (tweet.text.toLowerCase().indexOf(hashtag.toLowerCase()) !== -1) {
-                    console.log(hashtag, tweet.user.screen_name, tweet.text);
+                campaigns.forEach(function(campaign){
+                  if (tweet.text.toLowerCase().indexOf(campaign.hashtag__c.toLowerCase()) !== -1) {
+                    console.log('Inserting: ', tweet.id_str, contacts[tweet.user.screen_name].sfid, campaign.sfid, tweet.text);
+                    var insert = 'INSERT INTO salesforce.tweet__c(name, contact__c, campaign__c, text__c) VALUES($1, $2, $3, $4)';
+                    client.query(insert, [tweet.id_str, contacts[tweet.user.screen_name].sfid, campaign.sfid, tweet.text], function(err, result) {
+                      if(err) {
+                        console.error(err);
+                      } else {
+                        console.log('Inserted: ', tweet.id_str);
+                      }
+                    });
                   }
                 });
               }
