@@ -56,6 +56,7 @@ pg.connect(process.env.DATABASE_URL+'?ssl=true', function(err, client, done) {
             });
            
             stream.on('error', function(error) {
+              console.error(error);
               throw error;
             });
           }); 
