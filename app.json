@@ -24,7 +24,7 @@
     "TWITTER_ACCESS_TOKEN_SECRET": {
       "description": "Your Twitter app Access Token Secret",
       "required": true
-    },
-    "addons": ["heroku-postgresql", "herokuconnect:demo"]
-  }
+    }
+  },
+  "addons": ["heroku-postgresql", "herokuconnect:demo"]
 }
