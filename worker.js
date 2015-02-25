@@ -13,7 +13,9 @@ pg.connect(process.env.DATABASE_URL+'?ssl=true', function(err, client, done) {
     console.error(err);
     process.exit(1);
   }
-  client.query('SELECT twitter_handle__c, sfid FROM salesforce.contact WHERE contact.twitter_handle__c IS NOT NULL', function(err, result) {
+  client.query('SELECT twitter_handle__c, sfid '+
+               'FROM salesforce.contact '+
+               'WHERE contact.twitter_handle__c IS NOT NULL', function(err, result) {
     if (err) { 
       console.error(err);
     } else {
@@ -23,7 +25,9 @@ pg.connect(process.env.DATABASE_URL+'?ssl=true', function(err, client, done) {
       });
       console.log('contacts :', contacts);
 
-      client.query('SELECT hashtag__c, sfid FROM salesforce.campaign WHERE campaign.hashtag__c IS NOT NULL', function(err, result) {
+      client.query('SELECT hashtag__c, sfid '+
+                   'FROM salesforce.campaign '+
+                   'WHERE campaign.hashtag__c IS NOT NULL', function(err, result) {
         if (err) { 
           console.error(err);
         } else {
@@ -42,7 +46,8 @@ pg.connect(process.env.DATABASE_URL+'?ssl=true', function(err, client, done) {
                 campaigns.forEach(function(campaign){
                   if (tweet.text.toLowerCase().indexOf(campaign.hashtag__c.toLowerCase()) !== -1) {
                     console.log('Inserting: ', tweet.id_str, contacts[tweet.user.screen_name].sfid, campaign.sfid, tweet.text);
-                    var insert = 'INSERT INTO salesforce.tweet__c(name, contact__c, campaign__c, text__c) VALUES($1, $2, $3, $4)';
+                    var insert = 'INSERT INTO salesforce.tweet__c(name, contact__c, campaign__c, text__c) '+
+                                 'VALUES($1, $2, $3, $4)';
                     client.query(insert, [tweet.id_str, contacts[tweet.user.screen_name].sfid, campaign.sfid, tweet.text], function(err, result) {
                       if(err) {
                         console.error(err);
