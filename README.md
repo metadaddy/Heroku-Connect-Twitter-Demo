@@ -7,7 +7,7 @@ Instructions
 ------------
 
 * [Create a Twitter application](https://apps.twitter.com/app/new). You can leave the Callback URL blank, but your app will need read/write permissions and an access token.
-* [Create a Salesforce Developer Edition](https://developer.salesforce.com/signup)
+* [Create a Salesforce Developer Edition](https://developer.salesforce.com/signup), or use an existing one
 	* Add a **Twitter Handle** custom field to **Contact**
 	* Add a **Hashtag** custom field to **Campaign**
 	* Create a custom object, **Tweet**, with the following custom fields:
