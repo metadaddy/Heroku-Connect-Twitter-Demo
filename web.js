@@ -18,7 +18,7 @@ app.get('/create', function(req, res){
   var match = req.headers.host.match(hostRe);
 
   if (match) {
-    res.redirect(match[1]);
+    res.redirect(create_url+'?create='+match[1]);
   } else {
     res.status(400).send("You need to be running on Heroku!");
   }
