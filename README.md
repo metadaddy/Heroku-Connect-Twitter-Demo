@@ -29,7 +29,7 @@ Instructions
 	* Create a mapping for **Campaign**
 		* Enable mapping for the **Hashtag__c** field
 	* Create a mapping for **Tweet__c**
-		* Enable mapping for the the **Name**, **Contact__c**, **Campaign__c** and **Text__c** fields. 
+		* Enable mapping for the **Name**, **Contact__c**, **Campaign__c** and **Text__c** fields. 
 		* Click **DB -> SF** and enable **Write to Salesfore any updates to your Postgres database.**
 * Turn on the worker dyno in your new Heroku app. You can turn off the web dyno, since it's only used for configuration.
 
