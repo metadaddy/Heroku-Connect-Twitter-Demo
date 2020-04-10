@@ -10,7 +10,7 @@
   "license": "BSD-3-Clause",
   "dependencies": {
     "twitter": "~1.2.1",
-    "pg": "~4.3.0",
+    "pg": "~8.0.2",
     "express": "~3.4.8"
   },
   "engines": {
