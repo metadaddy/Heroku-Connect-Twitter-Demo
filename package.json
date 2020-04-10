@@ -11,7 +11,7 @@
   "dependencies": {
     "twitter": "~1.2.1",
     "pg": "~4.3.0",
-    "express": "~3.4.8"
+    "express": "~4.17.1"
   },
   "engines": {
     "node": "0.10.x"
